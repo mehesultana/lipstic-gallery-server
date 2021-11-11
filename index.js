@@ -22,18 +22,38 @@ async function run() {
 		console.log('database connected successfully');
 		const database = client.db('lipsticGallery');
 		const ratingsCollection = database.collection('ratings');
+		const lipsticksCollection = database.collection('lipsticks');
+
+		// get API
+		app.get('/ratings', async (req, res) => {
+			const cursor = ratingsCollection.find({});
+			const ratings = await cursor.toArray();
+			res.send(ratings);
+		});
 
 		// post API
 		app.post('/ratings', async (req, res) => {
-			console.log('hit the post api');
+			const rating = req.body;
+			console.log('hit the post api', rating);
+			const result = await ratingsCollection.insertOne(rating);
+			console.log(result);
+			res.json(result);
+		});
 
-			// const rating = req.body;
-			// console.log('hit the post api', rating);
+		// Add lipsticks API
+		app.get('/lipsticks', async (req, res) => {
+			const cursor = lipsticksCollection.find({});
+			const lipsticks = await cursor.toArray();
+			res.send(lipsticks);
+		});
 
-			// const result = await ratingsCollection.insertOne(rating);
-			// console.log(result);
-			// res.json(result);
-			res.send('post');
+		app.post('/lipsticks', async (req, res) => {
+			const lipstick = req.body;
+			console.log('hit the post api', lipstick);
+
+			const result = await lipsticksCollection.insertOne(lipstick);
+			console.log(result);
+			res.json(result);
 		});
 	} finally {
 		// await client.close();
