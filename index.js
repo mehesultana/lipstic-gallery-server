@@ -55,6 +55,15 @@ async function run() {
 			console.log(result);
 			res.json(result);
 		});
+
+		// Add Order API
+		app.post('/order', async (req, res) => {
+			const order = req.body;
+			console.log('order', order);
+			res.send('order processed');
+			const result = await orderCollection.insertOne(order);
+			res.json(result);
+		});
 	} finally {
 		// await client.close();
 	}
